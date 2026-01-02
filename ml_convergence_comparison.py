@@ -54,3 +54,61 @@ def gradient_descent_fixed_lr(X, y, learning_rate=0.01, n_iterations=100):
             print(f"Iteration {i}: Loss = {loss:.4f}, w = {w:.4f}, b = {b:.4f}")
     
     return w, b, loss_history, w_history, b_history
+
+
+def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=100):
+    """Gradient descent with adaptive learning rate (Barzilai-Borwein method)."""
+    w, b = 0.0, 0.0
+    loss_history = []
+    w_history = [w]
+    b_history = [b]
+    lr_history = []
+    
+    # First iteration with initial learning rate
+    dw_prev, db_prev = compute_gradients(X, y, w, b)
+    w_prev, b_prev = w, b
+    w = w - initial_lr * dw_prev
+    b = b - initial_lr * db_prev
+    
+    loss = compute_loss(X, y, w, b)
+    loss_history.append(loss)
+    w_history.append(w)
+    b_history.append(b)
+    lr_history.append(initial_lr)
+    
+    for i in range(1, n_iterations):
+        dw, db = compute_gradients(X, y, w, b)
+        
+        # Compute adaptive learning rate (Barzilai-Borwein)
+        # eta_n = |s^T y| / |y^T y| where s = x_new - x_old, y = grad_new - grad_old
+        delta_w = w - w_prev
+        delta_b = b - b_prev
+        delta_grad_w = dw - dw_prev
+        delta_grad_b = db - db_prev
+        
+        s_dot_y = abs(delta_w * delta_grad_w + delta_b * delta_grad_b)
+        y_dot_y = delta_grad_w ** 2 + delta_grad_b ** 2
+        
+        # Compute adaptive learning rate with safeguard
+        eta = s_dot_y / (y_dot_y + 1e-8)
+        # Clip learning rate to reasonable bounds
+        eta = np.clip(eta, 1e-4, 1.0)
+        
+        # Store previous values
+        w_prev, b_prev = w, b
+        dw_prev, db_prev = dw, db
+        
+        # Update parameters with adaptive learning rate
+        w = w - eta * dw
+        b = b - eta * db
+        
+        loss = compute_loss(X, y, w, b)
+        loss_history.append(loss)
+        w_history.append(w)
+        b_history.append(b)
+        lr_history.append(eta)
+        
+        if i % 10 == 0:
+            print(f"Iteration {i}: Loss = {loss:.4f}, w = {w:.4f}, b = {b:.4f}, lr = {eta:.6f}")
+    
+    return w, b, loss_history, w_history, b_history, lr_history
