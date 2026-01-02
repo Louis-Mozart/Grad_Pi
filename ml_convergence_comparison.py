@@ -214,3 +214,7 @@ def main():
     results_fixed = (w_fixed, b_fixed, loss_fixed, w_hist_fixed, b_hist_fixed)
     results_adaptive = (w_adaptive, b_adaptive, loss_adaptive, w_hist_adaptive, b_hist_adaptive, lr_hist)
     plot_results(X, y, results_fixed, results_adaptive)
+
+
+if __name__ == "__main__":
+    main()
