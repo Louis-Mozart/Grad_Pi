@@ -169,3 +169,48 @@ def plot_results(X, y, results_fixed, results_adaptive):
     plt.savefig('convergence_comparison.png', dpi=300, bbox_inches='tight')
     print("\nPlot saved as 'convergence_comparison.png'")
     plt.show()
+
+
+def main():
+    print("=" * 70)
+    print("Machine Learning Model: Linear Regression")
+    print("Comparing Fixed Learning Rate vs Adaptive Learning Rate")
+    print("=" * 70)
+    
+    # Generate data
+    X, y = generate_data(n_samples=100, noise=10)
+    print(f"\nGenerated {len(X)} data points")
+    print(f"True parameters: w = 2.5, b = 1.5")
+    
+    # Method 1: Fixed Learning Rate
+    print("\n" + "=" * 70)
+    print("METHOD 1: FIXED LEARNING RATE (0.01)")
+    print("=" * 70)
+    w_fixed, b_fixed, loss_fixed, w_hist_fixed, b_hist_fixed = gradient_descent_fixed_lr(
+        X, y, learning_rate=0.01, n_iterations=100
+    )
+    print(f"\nFinal parameters: w = {w_fixed:.4f}, b = {b_fixed:.4f}")
+    print(f"Final loss: {loss_fixed[-1]:.4f}")
+    
+    # Method 2: Adaptive Learning Rate
+    print("\n" + "=" * 70)
+    print("METHOD 2: ADAPTIVE LEARNING RATE (Barzilai-Borwein)")
+    print("=" * 70)
+    w_adaptive, b_adaptive, loss_adaptive, w_hist_adaptive, b_hist_adaptive, lr_hist = gradient_descent_adaptive_lr(
+        X, y, initial_lr=0.01, n_iterations=100
+    )
+    print(f"\nFinal parameters: w = {w_adaptive:.4f}, b = {b_adaptive:.4f}")
+    print(f"Final loss: {loss_adaptive[-1]:.4f}")
+    
+    # Compare results
+    print("\n" + "=" * 70)
+    print("COMPARISON SUMMARY")
+    print("=" * 70)
+    print(f"Fixed LR - Final Loss: {loss_fixed[-1]:.6f}")
+    print(f"Adaptive LR - Final Loss: {loss_adaptive[-1]:.6f}")
+    print(f"Improvement: {((loss_fixed[-1] - loss_adaptive[-1]) / loss_fixed[-1] * 100):.2f}%")
+    
+    # Plot results
+    results_fixed = (w_fixed, b_fixed, loss_fixed, w_hist_fixed, b_hist_fixed)
+    results_adaptive = (w_adaptive, b_adaptive, loss_adaptive, w_hist_adaptive, b_hist_adaptive, lr_hist)
+    plot_results(X, y, results_fixed, results_adaptive)
