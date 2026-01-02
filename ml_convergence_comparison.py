@@ -13,3 +13,10 @@ def generate_data(n_samples=100, noise=0.1):
     X = np.linspace(0, 10, n_samples)
     y = 2.5 * X + 1.5 + np.random.randn(n_samples) * noise
     return X, y
+
+
+def compute_loss(X, y, w, b):
+    """Compute Mean Squared Error loss."""
+    predictions = w * X + b
+    loss = np.mean((predictions - y) ** 2)
+    return loss
