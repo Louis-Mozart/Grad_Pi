@@ -112,3 +112,60 @@ def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=100):
             print(f"Iteration {i}: Loss = {loss:.4f}, w = {w:.4f}, b = {b:.4f}, lr = {eta:.6f}")
     
     return w, b, loss_history, w_history, b_history, lr_history
+
+
+def plot_results(X, y, results_fixed, results_adaptive):
+    """Plot comparison of both methods."""
+    w_fixed, b_fixed, loss_fixed, w_hist_fixed, b_hist_fixed = results_fixed
+    w_adaptive, b_adaptive, loss_adaptive, w_hist_adaptive, b_hist_adaptive, lr_hist = results_adaptive
+    
+    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    
+    # Plot 1: Data and fitted lines
+    ax1 = axes[0, 0]
+    ax1.scatter(X, y, alpha=0.5, label='Data')
+    ax1.plot(X, w_fixed * X + b_fixed, 'r-', linewidth=2, label=f'Fixed LR: y = {w_fixed:.2f}x + {b_fixed:.2f}')
+    ax1.plot(X, w_adaptive * X + b_adaptive, 'g-', linewidth=2, label=f'Adaptive LR: y = {w_adaptive:.2f}x + {b_adaptive:.2f}')
+    ax1.plot(X, 2.5 * X + 1.5, 'k--', linewidth=1, alpha=0.5, label='True: y = 2.5x + 1.5')
+    ax1.set_xlabel('X')
+    ax1.set_ylabel('y')
+    ax1.set_title('Linear Regression: Data and Fitted Lines')
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+    
+    # Plot 2: Loss convergence
+    ax2 = axes[0, 1]
+    ax2.plot(loss_fixed, 'r-', label='Fixed Learning Rate', linewidth=2)
+    ax2.plot(loss_adaptive, 'g-', label='Adaptive Learning Rate', linewidth=2)
+    ax2.set_xlabel('Iteration')
+    ax2.set_ylabel('Loss (MSE)')
+    ax2.set_title('Loss Convergence Comparison')
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+    ax2.set_yscale('log')
+    
+    # Plot 3: Parameter convergence (weight w)
+    ax3 = axes[1, 0]
+    ax3.plot(w_hist_fixed, 'r-', label='Fixed LR', linewidth=2)
+    ax3.plot(w_hist_adaptive, 'g-', label='Adaptive LR', linewidth=2)
+    ax3.axhline(y=2.5, color='k', linestyle='--', linewidth=1, alpha=0.5, label='True value (2.5)')
+    ax3.set_xlabel('Iteration')
+    ax3.set_ylabel('Weight (w)')
+    ax3.set_title('Weight Parameter Convergence')
+    ax3.legend()
+    ax3.grid(True, alpha=0.3)
+    
+    # Plot 4: Learning rate evolution (adaptive method)
+    ax4 = axes[1, 1]
+    ax4.plot(lr_hist, 'g-', linewidth=2)
+    ax4.axhline(y=0.01, color='r', linestyle='--', linewidth=2, label='Fixed LR (0.01)')
+    ax4.set_xlabel('Iteration')
+    ax4.set_ylabel('Learning Rate')
+    ax4.set_title('Learning Rate Evolution (Adaptive Method)')
+    ax4.legend()
+    ax4.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig('convergence_comparison.png', dpi=300, bbox_inches='tight')
+    print("\nPlot saved as 'convergence_comparison.png'")
+    plt.show()
