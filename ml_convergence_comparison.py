@@ -20,3 +20,12 @@ def compute_loss(X, y, w, b):
     predictions = w * X + b
     loss = np.mean((predictions - y) ** 2)
     return loss
+
+
+def compute_gradients(X, y, w, b):
+    """Compute gradients of loss with respect to w and b."""
+    n = len(X)
+    predictions = w * X + b
+    dw = (2 / n) * np.sum((predictions - y) * X)
+    db = (2 / n) * np.sum(predictions - y)
+    return dw, db
