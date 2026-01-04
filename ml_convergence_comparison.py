@@ -100,7 +100,7 @@ def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=100):
         
         # Update parameters with adaptive learning rate
         w = w - eta_w * dw
-        b = b - eta * db
+        b = b - eta_b * db
         
         loss = compute_loss(X, y, w, b)
         loss_history.append(loss)
