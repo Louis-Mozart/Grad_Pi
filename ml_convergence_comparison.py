@@ -91,9 +91,8 @@ def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=100):
 
         eta_w = abs(delta_w * delta_grad_w) / (delta_grad_w ** 2 + 1e-8)
         eta_b = abs(delta_b * delta_grad_b) / (delta_grad_b ** 2 + 1e-8)
-        
-        # Compute adaptive learning rate with safeguard
-        eta = s_dot_y / (y_dot_y + 1e-8)
+
+        eta = (eta_w + eta_b) / 2  # Average learning rate for logging
         # Clip learning rate to reasonable bounds
         eta = np.clip(eta, 1e-4, 1.0)
         
