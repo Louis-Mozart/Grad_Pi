@@ -93,8 +93,6 @@ def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=100):
         eta_b = abs(delta_b * delta_grad_b) / (delta_grad_b ** 2 + 1e-8)
 
         eta = (eta_w + eta_b) / 2  # Average learning rate for logging
-        # Clip learning rate to reasonable bounds
-        eta = np.clip(eta, 1e-4, 1.0)
         
         # Store previous values
         w_prev, b_prev = w, b
