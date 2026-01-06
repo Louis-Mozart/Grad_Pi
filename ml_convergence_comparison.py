@@ -31,7 +31,7 @@ def compute_gradients(X, y, w, b):
     return dw, db
 
 
-def gradient_descent_fixed_lr(X, y, learning_rate=0.01, n_iterations=100):
+def gradient_descent_fixed_lr(X, y, learning_rate=0.01, n_iterations=200):
     """Gradient descent with fixed learning rate."""
     w, b = 0.0, 0.0
     loss_history = []
@@ -56,7 +56,7 @@ def gradient_descent_fixed_lr(X, y, learning_rate=0.01, n_iterations=100):
     return w, b, loss_history, w_history, b_history
 
 
-def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=100):
+def gradient_descent_adaptive_lr(X, y, initial_lr=0.01, n_iterations=200):
     """Gradient descent with adaptive learning rate (Barzilai-Borwein method)."""
     w, b = 0.0, 0.0
     loss_history = []
@@ -187,7 +187,7 @@ def main():
     print("METHOD 1: FIXED LEARNING RATE (0.01)")
     print("=" * 70)
     w_fixed, b_fixed, loss_fixed, w_hist_fixed, b_hist_fixed = gradient_descent_fixed_lr(
-        X, y, learning_rate=0.01, n_iterations=100
+        X, y, learning_rate=0.01, n_iterations=10
     )
     print(f"\nFinal parameters: w = {w_fixed:.4f}, b = {b_fixed:.4f}")
     print(f"Final loss: {loss_fixed[-1]:.4f}")
@@ -197,7 +197,7 @@ def main():
     print("METHOD 2: ADAPTIVE LEARNING RATE (Barzilai-Borwein)")
     print("=" * 70)
     w_adaptive, b_adaptive, loss_adaptive, w_hist_adaptive, b_hist_adaptive, lr_hist = gradient_descent_adaptive_lr(
-        X, y, initial_lr=0.01, n_iterations=100
+        X, y, initial_lr=0.01, n_iterations=10
     )
     print(f"\nFinal parameters: w = {w_adaptive:.4f}, b = {b_adaptive:.4f}")
     print(f"Final loss: {loss_adaptive[-1]:.4f}")
