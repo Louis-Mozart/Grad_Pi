@@ -173,3 +173,46 @@ def plot_results(X, y, a_fixed, b_fixed, c_fixed, a_bb, b_bb, c_bb,
     plt.savefig('polynomial_convergence_comparison.png', dpi=300, bbox_inches='tight')
     print("Visualization saved as 'polynomial_convergence_comparison.png'")
     plt.show()
+
+
+def main():
+    """Main function to run the comparison."""
+    print("Polynomial Regression: Fixed LR vs Barzilai-Borwein")
+    print("=" * 60)
+    
+    print("\n1. Generating polynomial data...")
+    X, y = generate_polynomial_data(n_samples=100, noise=5.0)
+    print(f"   Generated {len(X)} data points")
+    
+    print("\n2. Running Fixed Learning Rate Gradient Descent...")
+    learning_rate = 0.001
+    n_iterations = 1000
+    a_fixed, b_fixed, c_fixed, loss_history_fixed = gradient_descent_fixed(
+        X, y, learning_rate=learning_rate, n_iterations=n_iterations
+    )
+    print(f"   Final parameters: a={a_fixed:.4f}, b={b_fixed:.4f}, c={c_fixed:.4f}")
+    print(f"   Final loss: {loss_history_fixed[-1]:.4f}")
+    
+    print("\n3. Running Barzilai-Borwein Gradient Descent...")
+    a_bb, b_bb, c_bb, loss_history_bb = gradient_descent_bb(
+        X, y, n_iterations=n_iterations, initial_lr=learning_rate
+    )
+    print(f"   Final parameters: a={a_bb:.4f}, b={b_bb:.4f}, c={c_bb:.4f}")
+    print(f"   Final loss: {loss_history_bb[-1]:.4f}")
+    
+    print("\n4. Comparison:")
+    print(f"   True parameters: a=0.5000, b=2.0000, c=1.0000")
+    improvement = ((loss_history_fixed[-1] - loss_history_bb[-1]) /
+                   loss_history_fixed[-1] * 100)
+    print(f"   BB Method improvement: {improvement:.2f}%")
+    
+    print("\n5. Creating visualizations...")
+    plot_results(X, y, a_fixed, b_fixed, c_fixed, a_bb, b_bb, c_bb,
+                 loss_history_fixed, loss_history_bb)
+    
+    print("\n" + "=" * 60)
+    print("Analysis complete!")
+
+
+if __name__ == "__main__":
+    main()
