@@ -147,28 +147,6 @@ def plot_results(X, y, a_fixed, b_fixed, c_fixed, a_bb, b_bb, c_bb,
     ax4 = axes[1, 1]
     ax4.axis('off')
     
-    stats_text = f"""
-    CONVERGENCE STATISTICS
-    
-    Fixed Learning Rate:
-    • Final Loss: {loss_history_fixed[-1]:.4f}
-    • Parameters: a={a_fixed:.4f}, b={b_fixed:.4f}, c={c_fixed:.4f}
-    
-    Barzilai-Borwein Method:
-    • Final Loss: {loss_history_bb[-1]:.4f}
-    • Parameters: a={a_bb:.4f}, b={b_bb:.4f}, c={c_bb:.4f}
-    
-    True Parameters:
-    • a=0.5000, b=2.0000, c=1.0000
-    
-    Improvement:
-    • Loss Reduction: {((loss_history_fixed[-1] - loss_history_bb[-1]) / loss_history_fixed[-1] * 100):.2f}%
-    """
-    
-    ax4.text(0.1, 0.5, stats_text, transform=ax4.transAxes,
-             fontsize=11, verticalalignment='center', fontfamily='monospace',
-             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-    
     plt.tight_layout()
     plt.savefig('polynomial_convergence_comparison.png', dpi=300, bbox_inches='tight')
     print("Visualization saved as 'polynomial_convergence_comparison.png'")
