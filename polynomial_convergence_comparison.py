@@ -34,3 +34,21 @@ def compute_gradients(X, y, a, b, c):
     dc = (2 / n) * np.sum(error)
     
     return da, db, dc
+
+
+def gradient_descent_fixed(X, y, learning_rate=0.001, n_iterations=1000):
+    """Gradient Descent with Fixed Learning Rate."""
+    a, b, c = 0.0, 0.0, 0.0
+    loss_history = []
+    
+    for i in range(n_iterations):
+        loss = compute_loss(X, y, a, b, c)
+        loss_history.append(loss)
+        
+        da, db, dc = compute_gradients(X, y, a, b, c)
+        
+        a -= learning_rate * da
+        b -= learning_rate * db
+        c -= learning_rate * dc
+    
+    return a, b, c, loss_history
