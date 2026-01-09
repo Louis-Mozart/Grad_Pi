@@ -98,3 +98,78 @@ def gradient_descent_bb(X, y, n_iterations=1000, initial_lr=0.001):
         c -= learning_rate * dc
     
     return a, b, c, loss_history
+
+
+def plot_results(X, y, a_fixed, b_fixed, c_fixed, a_bb, b_bb, c_bb,
+                 loss_history_fixed, loss_history_bb):
+    """Create visualization comparing fixed vs BB methods."""
+    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    
+    ax1 = axes[0, 0]
+    ax1.scatter(X, y, alpha=0.5, label='Data Points')
+    X_plot = np.linspace(X.min(), X.max(), 200)
+    
+    y_fixed = a_fixed * X_plot**2 + b_fixed * X_plot + c_fixed
+    y_bb = a_bb * X_plot**2 + b_bb * X_plot + c_bb
+    y_true = 0.5 * X_plot**2 + 2.0 * X_plot + 1.0
+    
+    ax1.plot(X_plot, y_true, 'g--', linewidth=2, label='True Polynomial')
+    ax1.plot(X_plot, y_fixed, 'r-', linewidth=2, label='Fixed LR Fit')
+    ax1.plot(X_plot, y_bb, 'b-', linewidth=2, label='BB Method Fit')
+    ax1.set_xlabel('X')
+    ax1.set_ylabel('y')
+    ax1.set_title('Polynomial Fitting Comparison')
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+    
+    ax2 = axes[0, 1]
+    ax2.plot(loss_history_fixed, 'r-', linewidth=2, label='Fixed LR', alpha=0.7)
+    ax2.plot(loss_history_bb, 'b-', linewidth=2, label='BB Method', alpha=0.7)
+    ax2.set_xlabel('Iteration')
+    ax2.set_ylabel('Loss (MSE)')
+    ax2.set_title('Loss Convergence (Log Scale)')
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+    ax2.set_yscale('log')
+    
+    ax3 = axes[1, 0]
+    iterations_zoom = min(100, len(loss_history_fixed))
+    ax3.plot(loss_history_fixed[:iterations_zoom], 'r-', linewidth=2,
+             label='Fixed LR', alpha=0.7)
+    ax3.plot(loss_history_bb[:iterations_zoom], 'b-', linewidth=2,
+             label='BB Method', alpha=0.7)
+    ax3.set_xlabel('Iteration')
+    ax3.set_ylabel('Loss (MSE)')
+    ax3.set_title('Loss Convergence (First 100 Iterations)')
+    ax3.legend()
+    ax3.grid(True, alpha=0.3)
+    
+    ax4 = axes[1, 1]
+    ax4.axis('off')
+    
+    stats_text = f"""
+    CONVERGENCE STATISTICS
+    
+    Fixed Learning Rate:
+    • Final Loss: {loss_history_fixed[-1]:.4f}
+    • Parameters: a={a_fixed:.4f}, b={b_fixed:.4f}, c={c_fixed:.4f}
+    
+    Barzilai-Borwein Method:
+    • Final Loss: {loss_history_bb[-1]:.4f}
+    • Parameters: a={a_bb:.4f}, b={b_bb:.4f}, c={c_bb:.4f}
+    
+    True Parameters:
+    • a=0.5000, b=2.0000, c=1.0000
+    
+    Improvement:
+    • Loss Reduction: {((loss_history_fixed[-1] - loss_history_bb[-1]) / loss_history_fixed[-1] * 100):.2f}%
+    """
+    
+    ax4.text(0.1, 0.5, stats_text, transform=ax4.transAxes,
+             fontsize=11, verticalalignment='center', fontfamily='monospace',
+             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+    
+    plt.tight_layout()
+    plt.savefig('polynomial_convergence_comparison.png', dpi=300, bbox_inches='tight')
+    print("Visualization saved as 'polynomial_convergence_comparison.png'")
+    plt.show()
