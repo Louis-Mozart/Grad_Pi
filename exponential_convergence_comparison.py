@@ -151,3 +151,56 @@ def plot_results(x_fixed, x_history_fixed, f_history_fixed,
     plt.savefig('exponential_convergence_comparison.png', dpi=300, bbox_inches='tight')
     print("Visualization saved as 'exponential_convergence_comparison.png'")
     plt.show()
+
+
+def main():
+    """Main function to run the comparison."""
+    print("Exponential Function Optimization: f(x) = e^x + x + 1")
+    print("=" * 60)
+    
+    # Initial parameters
+    x_init = 0.0
+    learning_rate = 0.1
+    n_iterations = 50
+    
+    print(f"\nInitial x: {x_init}")
+    print(f"Initial f(x): {compute_function(x_init):.6f}")
+    
+    # Run Fixed Learning Rate Gradient Descent
+    print(f"\n1. Running Fixed Learning Rate Gradient Descent (LR={learning_rate})...")
+    x_fixed, x_history_fixed, f_history_fixed = gradient_descent_fixed(
+        x_init=x_init, learning_rate=learning_rate, n_iterations=n_iterations
+    )
+    print(f"   Final x: {x_fixed:.6f}")
+    print(f"   Final f(x): {f_history_fixed[-1]:.6f}")
+    print(f"   Iterations: {len(f_history_fixed) - 1}")
+    
+    # Run Barzilai-Borwein Gradient Descent
+    print(f"\n2. Running Barzilai-Borwein Gradient Descent...")
+    x_bb, x_history_bb, f_history_bb = gradient_descent_bb(
+        x_init=x_init, n_iterations=n_iterations, initial_lr=learning_rate
+    )
+    print(f"   Final x: {x_bb:.6f}")
+    print(f"   Final f(x): {f_history_bb[-1]:.6f}")
+    print(f"   Iterations: {len(f_history_bb) - 1}")
+    
+    # Compare results
+    print("\n3. Comparison:")
+    print(f"   Difference in final x: {abs(x_fixed - x_bb):.6f}")
+    print(f"   Difference in final f(x): {abs(f_history_fixed[-1] - f_history_bb[-1]):.6f}")
+    if f_history_bb[-1] < f_history_fixed[-1]:
+        print(f"   BB Method achieved {f_history_fixed[-1] - f_history_bb[-1]:.6f} lower function value")
+    else:
+        print(f"   Fixed LR achieved {f_history_bb[-1] - f_history_fixed[-1]:.6f} lower function value")
+    
+    # Create visualizations
+    print("\n4. Creating visualizations...")
+    plot_results(x_fixed, x_history_fixed, f_history_fixed,
+                 x_bb, x_history_bb, f_history_bb)
+    
+    print("\n" + "=" * 60)
+    print("Analysis complete!")
+
+
+if __name__ == "__main__":
+    main()
